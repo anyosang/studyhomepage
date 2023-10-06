@@ -1,0 +1,40 @@
+<%- include('header.ejs') %>
+<%- include('nav.ejs') %>
+  <div class="white-bg">
+    <% for (let i=0; i < posts.length; i++){ %>
+      <div class="list-box">
+        <h4>
+          <a href="/detail/<%= posts[i]._id %>">
+            <%= posts[i].title %>
+          </a>
+          <a href="/edit/<%= posts[i]._id %>">✏️</a>
+          <span class="delete" data-postid="<%= posts[i]._id %>">🗑️</span>
+        </h4>
+        <p>
+          <%= posts[i].date %>
+        </p>
+      </div>
+      <% } %>
+  </div>
+  <a href="/list/next/<%= posts[posts.length-1]._id %>">Next</a>
+  <script>
+    // axios 사용해보기
+    document
+      .querySelectorAll(".delete")[3]
+      .addEventListener("click", function (e) {
+        console.log(e.target.dataset.postid);
+        var result = confirm("삭제하시겠습니까?");
+        console.log(result);
+        if (result == true) {
+          fetch("/delete?postId=" + e.target.dataset.postid, {
+            method: "DELETE",
+          })
+            .then((r) => r.text())
+            .then((r) => {
+              e.target.parentElement.parentElement.style.display = "none";
+            });
+        }
+      });
+  </script>
+
+<%- include('footer.ejs') %>
