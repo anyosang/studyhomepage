@@ -4,15 +4,28 @@ const bodyParser= require('body-parser')
 var requestIp = require('request-ip')
 const router = express.Router()
 const { connectDB, getDB } = require('../db')
+const { BSON, ObjectId } = require("mongodb")
 
 router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({extended: true}))
 
 // 담당자 페이지
-router.get('/view', async (req, res) => {
+router.get('/view/:objectId', async (req, res) => {
   console.log("board./view --------------------------------------------")
     res.render("write")
+    let objectId = req.params.objectId
+    
+    try {
+      await connectDB();
+      const db = getDB();
+      const collection = db.collection('board')
+      let result = await collection.findOne({"_id": new ObjectId(objectId)})
+      console.log("================= 여기 2 ==============="+result.subject)
+    } catch(e) {
+      console.log(e)
+    }
 });
+
 router.get('/list', async (req, res) => {
   console.log("board./list --------------------------------------------")
 
