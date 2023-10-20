@@ -12,7 +12,6 @@ router.use(bodyParser.urlencoded({extended: true}))
 // 담당자 페이지
 router.get('/view/:objectId', async (req, res) => {
   console.log("board./view --------------------------------------------")
-    res.render("write")
     let objectId = req.params.objectId
     
     try {
@@ -20,9 +19,12 @@ router.get('/view/:objectId', async (req, res) => {
       const db = getDB();
       const collection = db.collection('board')
       let result = await collection.findOne({"_id": new ObjectId(objectId)})
-      console.log("================= 여기 2 ==============="+result.subject)
+      
+      res.render("write", { board: result})
     } catch(e) {
       console.log(e)
+      res.status(500).send('Internal Server Error') // 오류가 발생한 경우 적절한 오류 응답을 보냅니다.
+
     }
 });
 

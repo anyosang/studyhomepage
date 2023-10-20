@@ -1,7 +1,23 @@
 <%- include('header.ejs') %>
 <%- include('nav.ejs') %>
 
-<div id="content"></div>
+<div id="content">
+
+
+  <% if (board) { %>
+    <h1>Board Details</h1>
+    <p>Date: <%= board.date %></p>
+    <p>Form: <%= board.form %></p>
+    <p>Writer: <%= board.writer %></p>
+    <div>
+        Content:
+        <%- board.content %> <!-- 이 부분은 HTML이 포함된 내용이라면 <%= %>이 아닌 <%- %>를 사용합니다. -->
+    </div>
+<% } else { %>
+    <p>No board data found.</p>
+<% } %>
+</div>
+
 <input type="hidden" id="subject" value="8월 14일 회의록">
 <input type="hidden" id="form" value="회의록">
 <input type="hidden" id="writer" value="홍길동">
@@ -12,7 +28,7 @@
       el: document.querySelector('#content'), // 에디터를 적용할 요소 (컨테이너)
       height: '500px',                        // 에디터 영역의 높이 값 (OOOpx || auto)
       initialEditType: 'markdown',            // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
-      initialValue: '내용을 입력해 주세요.',     // 내용의 초기 값으로, 반드시 마크다운 문자열 형태여야 함
+      //initialValue: '내용을 입력해 주세요.',     // 내용의 초기 값으로, 반드시 마크다운 문자열 형태여야 함
       previewStyle: 'vertical'                // 마크다운 프리뷰 스타일 (tab || vertical)
   });
 
@@ -32,6 +48,7 @@
     .then(response => response.json())
     .then(data => {
       console.log('Post created:', data);
+      
     })
     .catch(error => {
       console.error('Error creating post:', error);
